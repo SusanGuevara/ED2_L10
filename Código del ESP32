@@ -1,0 +1,46 @@
+/* Universidad Del Valle de Guatemala
+   Facultad de Ingeniería
+   Departamento de Electrónica, Mecatrónica y Biomédica
+   Electrónica Digital 2
+
+   Susan Daniela Guevara Catalán
+   22519
+
+   Laboratorio No. 10 - SPI y SD
+
+   Parte 1: Funciones que obtienen la entrada analógica de un potenciómetro
+*/
+
+/********** IMPORTACIÓN DE LIBRERÍAS **********/
+#include <Arduino.h>
+// Permite la transmisión de datos con la STM32
+#include <HardwareSerial.h>
+
+/********** DECLARACIÓN DE VARIABLES GLOBALES **********/
+// Pin del potenciometro
+#define Pot 34
+// Configurar el puerto UART en ESP32
+HardwareSerial UART_ESP32(2);  // UART2
+
+/********** PROTOTIPO DE FUNCIONES **********/
+
+/********** CONFIGURACIÓN DE PINES **********/
+void setup() {
+  // Para monitorear desde el puerto serie
+  Serial.begin(9600);  
+  // Iniciar UART2 a: 115200 baudios, configuración de datos, pin RX, pin TX
+  UART_ESP32.begin(115200, SERIAL_8N1, 16, 17); 
+  // Definición de los potenciómetros como entradas
+  pinMode(Pot, INPUT);
+}
+
+/********** CÓDIGO PRINCIPAL **********/
+void loop() {
+  // Lee el valor analógico de los potenciómetros
+  unsigned int valorPot = analogRead(Pot);
+  int voltaje = (valorPot*3300)/1023; // Convierte a voltaje
+  // Envía los valores a la STM32
+  UART_ESP32.print(voltaje);
+  delay(1000);  // Tiempo de espera entre cada lectura
+}
+
